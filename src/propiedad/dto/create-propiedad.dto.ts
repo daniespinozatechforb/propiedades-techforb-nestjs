@@ -19,10 +19,6 @@ export class CreatePropiedadDto {
   @IsEnum(TipoPropiedad)
   tipo: TipoPropiedad;
 
-  @IsOptional()
-  @IsString()
-  imagenUrl?: string;
-
   @IsNotEmpty()
   @IsNumber()
   localidadId: number;

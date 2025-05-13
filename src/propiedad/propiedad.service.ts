@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePropiedadDto } from './dto/create-propiedad.dto';
@@ -6,6 +6,7 @@ import { UpdatePropiedadDto } from './dto/update-propiedad.dto';
 import { Propiedad } from './entities/propiedad.entity';
 import { Localidad } from 'src/localidad/entities/localidad.entity';
 import { Provincia } from 'src/provincia/entities/provincia.entity';
+import { PropiedadResponseDTO } from './dto/propiedad-response.dto';
 
 
 @Injectable()
@@ -33,7 +34,6 @@ export class PropiedadService {
       ubicacion: dto.ubicacion,
       precio: dto.precio,
       tipo: dto.tipo,
-      imagenUrl: dto.imagenUrl,
       localidad: localidad,
       provincia: provincia,
     });
@@ -41,42 +41,39 @@ export class PropiedadService {
     return this.propiedadRepository.save(propiedad);
   }
 
-  async findAll(): Promise<Propiedad[]> {
-    return this.propiedadRepository.find({ relations: ['localidad', 'provincia'] });
+  async findAll(): Promise<PropiedadResponseDTO[]> {
+    const propiedades = await this.propiedadRepository.find({
+      relations: ['imagenes', 'localidad', 'provincia'],
+    });
+
+    return propiedades.map((prop) => this.toResponseDto(prop));
   }
 
-  async findOne(id: number): Promise<Propiedad> {
-    const propiedad = await this.propiedadRepository.findOne({ where: { id }, relations: ['localidad', 'provincia'] });
-    if (!propiedad) throw new Error('Propiedad no encontrada');
-    return propiedad;
-  }
+  async findOne(id: number): Promise<PropiedadResponseDTO> {
+    const propiedad = await this.propiedadRepository.findOne({
+      where: { id },
+      relations: ['imagenes', 'localidad', 'provincia'],
+    });
 
-  async update(id: number, dto: UpdatePropiedadDto): Promise<Propiedad> {
-    const propiedad = await this.findOne(id);
-
-    if (dto.nombre) propiedad.nombre = dto.nombre;
-    if (dto.ubicacion) propiedad.ubicacion = dto.ubicacion;
-    if (dto.precio) propiedad.precio = dto.precio;
-    if (dto.tipo) propiedad.tipo = dto.tipo;
-    if (dto.imagenUrl) propiedad.imagenUrl = dto.imagenUrl;
-
-    if (dto.localidadId) {
-      const localidad = await this.localidadRepository.findOne({ where: { id: dto.localidadId } });
-      if (!localidad) throw new Error('Localidad no encontrada');
-      propiedad.localidad = localidad;
+    if (!propiedad) {
+      throw new NotFoundException(`Propiedad con id ${id} no encontrada`);
     }
 
-    if (dto.provinciaId) {
-      const provincia = await this.provinciaRepository.findOne({ where: { id: dto.provinciaId } });
-      if (!provincia) throw new Error('Provincia no encontrada');
-      propiedad.provincia = provincia;
-    }
-
-    return this.propiedadRepository.save(propiedad);
+    return this.toResponseDto(propiedad);
   }
 
-  async remove(id: number): Promise<void> {
-    const propiedad = await this.findOne(id);
-    await this.propiedadRepository.remove(propiedad);
+  private toResponseDto(prop: Propiedad): PropiedadResponseDTO {
+    return {
+      id: prop.id,
+      nombre: prop.nombre,
+      ubicacion: prop.ubicacion,
+      precio: prop.precio,
+      tipo: prop.tipo,
+      localidad: prop.localidad?.nombre || '',
+      provincia: prop.provincia?.nombre || '',
+      imagenes: prop.imagenes?.map((img) => img.url) || [],
+    };
   }
+
+
 }

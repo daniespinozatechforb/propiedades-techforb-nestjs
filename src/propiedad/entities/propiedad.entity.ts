@@ -25,9 +25,6 @@ export class Propiedad {
   })
   tipo: TipoPropiedad;
 
-  @Column({ nullable: true })
-  imagenUrl: string;
-
   @ManyToOne(() => Localidad, (localidad) => localidad.propiedades)
   @JoinColumn({ name: 'localidadId' })
   localidad: Localidad;

@@ -15,37 +15,35 @@ export class ImagenService {
 
     @InjectRepository(Propiedad)
     private readonly propiedadRepository: Repository<Propiedad>,
-  ) {}
+  ) { }
+
+  /*   async create(createImagenDto: CreateImagenDto): Promise<Imagen> {
+    const propiedad = await this.propiedadRepository.findOne({
+      where: { id: createImagenDto.propiedadId },
+      relations: ['imagenes'],
+    });
   
-  async create(createImagenDto: CreateImagenDto): Promise<Imagen> {
-  const propiedad = await this.propiedadRepository.findOneBy({ id: createImagenDto.propiedadId });
+    if (!propiedad) {
+      throw new NotFoundException('Propiedad no encontrada');
+    }
+  
+    const imagen = this.imagenRepository.create({
+      url: createImagenDto.url,
+      propiedad,
+    });
+  
+    return this.imagenRepository.save(imagen);
+  } */
 
-  if (!propiedad) {
-    throw new NotFoundException('Propiedad no encontrada');
+  async addImagenToPropiedad(propiedadId: number, dto: CreateImagenDto): Promise<Imagen> {
+    const propiedad = await this.propiedadRepository.findOne({
+      where: { id: propiedadId },
+      relations: ['imagenes'],
+    });
+    if (!propiedad) throw new NotFoundException('Propiedad no encontrada');
+
+    const imagen = this.imagenRepository.create({ url: dto.url, propiedad });
+    return await this.imagenRepository.save(imagen);
   }
 
-  const nuevaImagen = this.imagenRepository.create({
-    url: createImagenDto.url,
-    propiedad,
-  });
-
-  return this.imagenRepository.save(nuevaImagen);
-}
-
-
-  findAll() {
-    return `This action returns all imagen`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} imagen`;
-  }
-
-  update(id: number, updateImagenDto: UpdateImagenDto) {
-    return `This action updates a #${id} imagen`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} imagen`;
-  }
 }

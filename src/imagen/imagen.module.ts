@@ -11,5 +11,6 @@ import { Propiedad } from '../propiedad/entities/propiedad.entity';
   ],
   controllers: [ImagenController],
   providers: [ImagenService],
+  exports: [ImagenService],
 })
 export class ImagenModule {}
