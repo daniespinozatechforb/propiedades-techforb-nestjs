@@ -21,7 +21,11 @@ export class ProvinciaService {
     return this.provinciaRepository.find({ relations: ['localidades'] });
   }
 
-  async findOne(id: number): Promise<Provincia|null> {//revisar la devolucón de la promesa
-    return this.provinciaRepository.findOne({ where: { id }, relations: ['localidades'] });
+  async findOne(id: number): Promise<Provincia | null> {
+    //revisar la devolucón de la promesa
+    return this.provinciaRepository.findOne({
+      where: { id },
+      relations: ['localidades'],
+    });
   }
 }

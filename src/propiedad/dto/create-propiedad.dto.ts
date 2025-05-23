@@ -1,11 +1,20 @@
-import { IsNotEmpty, IsString, IsNumber, IsEnum, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsEnum,
+  IsArray,
+  ArrayNotEmpty,
+  ArrayUnique,
+} from 'class-validator';
 import { TipoPropiedad } from '../enums/tipo-propiedad.enum';
-
+import { EstadoConstruccion } from '../enums/estado-construccion.enum';
+import { TipoInmueble } from '../enums/tipo-inmueble.enum';
 
 export class CreatePropiedadDto {
   @IsNotEmpty()
-  @IsString()
-  nombre: string;
+  @IsEnum(TipoInmueble)
+  tipoInmueble: TipoInmueble;
 
   @IsNotEmpty()
   @IsString()
@@ -16,8 +25,24 @@ export class CreatePropiedadDto {
   precio: number;
 
   @IsNotEmpty()
+  @IsNumber()
+  antiguedad: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  superficie: number;
+
+  @IsNotEmpty()
   @IsEnum(TipoPropiedad)
   tipo: TipoPropiedad;
+
+  @IsNotEmpty()
+  @IsEnum(EstadoConstruccion)
+  estadoConstruccion: EstadoConstruccion;
+
+  @IsNotEmpty()
+  @IsNumber()
+  dormitorios: number;
 
   @IsNotEmpty()
   @IsNumber()
@@ -26,4 +51,9 @@ export class CreatePropiedadDto {
   @IsNotEmpty()
   @IsNumber()
   provinciaId: number;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayUnique()
+  caracteristicasIds: number[];
 }

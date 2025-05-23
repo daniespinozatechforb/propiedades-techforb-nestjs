@@ -5,7 +5,6 @@ import { CreateLocalidadDto } from './dto/create-localidad.dto';
 import { Localidad } from './entities/localidad.entity';
 import { Provincia } from 'src/provincia/entities/provincia.entity';
 
-
 @Injectable()
 export class LocalidadService {
   constructor(
@@ -13,10 +12,12 @@ export class LocalidadService {
     private readonly localidadRepository: Repository<Localidad>,
     @InjectRepository(Provincia)
     private readonly provinciaRepository: Repository<Provincia>,
-  ) { }
+  ) {}
 
   async create(dto: CreateLocalidadDto): Promise<Localidad> {
-    const provincia = await this.provinciaRepository.findOne({ where: { id: dto.provinciaId } });
+    const provincia = await this.provinciaRepository.findOne({
+      where: { id: dto.provinciaId },
+    });
 
     if (!provincia) {
       throw new Error('Provincia no encontrada');
@@ -31,16 +32,19 @@ export class LocalidadService {
   }
 
   async findAll(): Promise<Localidad[]> {
-    return this.localidadRepository.find({ relations: ['provincia', 'propiedades'] });
+    return this.localidadRepository.find({
+      relations: ['provincia', 'propiedades'],
+    });
   }
 
   async findOne(id: number): Promise<Localidad> {
-    const localidad = await this.localidadRepository.findOne({ where: { id }, relations: ['provincia', 'propiedades'] });
+    const localidad = await this.localidadRepository.findOne({
+      where: { id },
+      relations: ['provincia', 'propiedades'],
+    });
     if (!localidad) {
       throw new Error('Localidad no encontrada');
     }
     return localidad;
   }
-
 }
-

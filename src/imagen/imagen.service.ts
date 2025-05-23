@@ -7,16 +7,18 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ImagenService {
-
   constructor(
     @InjectRepository(Imagen)
     private readonly imagenRepository: Repository<Imagen>,
 
     @InjectRepository(Propiedad)
     private readonly propiedadRepository: Repository<Propiedad>,
-  ) { }
+  ) {}
 
-  async addImagenToPropiedad(propiedadId: number, dto: CreateImagenDto): Promise<Imagen> {
+  async addImagenToPropiedad(
+    propiedadId: number,
+    dto: CreateImagenDto,
+  ): Promise<Imagen> {
     const propiedad = await this.propiedadRepository.findOne({
       where: { id: propiedadId },
       relations: ['imagenes'],
@@ -26,5 +28,4 @@ export class ImagenService {
     const imagen = this.imagenRepository.create({ url: dto.url, propiedad });
     return await this.imagenRepository.save(imagen);
   }
-
 }

@@ -1,4 +1,4 @@
 export enum TipoPropiedad {
-  ALQUILER = 'alquiler',
-  VENTA = 'venta',
+  ALQUILER = 'Alquiler',
+  VENTA = 'Venta',
 }
