@@ -15,10 +15,10 @@ import { Caracteristica } from './caracteristica/entities/caracteristica.entity'
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
+      host: 'shortline.proxy.rlwy.net',
+      port: 14785,
       username: 'postgres',
-      password: '123456789',
+      password: 'adOfHYHpwlGbYKTDAXODLJBFwpPZBoKv',
       database: 'propiedades',
       entities: [Propiedad, Localidad, Provincia, Imagen, Caracteristica],
       synchronize: true,
