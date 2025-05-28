@@ -6,9 +6,7 @@ import { Imagen } from './entities/imagen.entity';
 import { Propiedad } from '../propiedad/entities/propiedad.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Imagen, Propiedad]),
-  ],
+  imports: [TypeOrmModule.forFeature([Imagen, Propiedad])],
   controllers: [ImagenController],
   providers: [ImagenService],
   exports: [ImagenService],

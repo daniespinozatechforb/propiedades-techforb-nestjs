@@ -9,6 +9,6 @@ import { Provincia } from 'src/provincia/entities/provincia.entity';
   imports: [TypeOrmModule.forFeature([Localidad, Provincia])],
   controllers: [LocalidadController],
   providers: [LocalidadService],
-  exports: [LocalidadService],
+  //exports: [LocalidadService],
 })
 export class LocalidadModule {}
